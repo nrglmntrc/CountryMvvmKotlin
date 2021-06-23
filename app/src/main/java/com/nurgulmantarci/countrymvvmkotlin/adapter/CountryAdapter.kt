@@ -40,9 +40,6 @@ class CountryAdapter(val countryList: ArrayList<Country>): RecyclerView.Adapter<
         holder.view.listener = this
 
 
-
-
-
         /*
         holder.view.name.text = countryList[position].countryName
         holder.view.region.text = countryList[position].countryRegion

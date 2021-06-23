@@ -1,5 +1,6 @@
 package com.nurgulmantarci.countrymvvmkotlin.view
 
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,13 +11,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nurgulmantarci.countrymvvmkotlin.R
 import com.nurgulmantarci.countrymvvmkotlin.adapter.CountryAdapter
-import com.nurgulmantarci.countrymvvmkotlin.viewmodel.FeedViewModel
+import com.nurgulmantarci.countrymvvmkotlin.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_feed.*
 
 
 class FeedFragment : Fragment() {
 
-    private lateinit var viewModel:FeedViewModel
+    private lateinit var viewModel: ListViewModel
     private val countryAdapter = CountryAdapter(arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +36,20 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel=ViewModelProviders.of(this).get(FeedViewModel::class.java)
+        viewModel=ViewModelProviders.of(this).get(ListViewModel::class.java)
         viewModel.refreshData()
 
         recyclerviewCountryList.layoutManager=LinearLayoutManager(context)
         recyclerviewCountryList.adapter=countryAdapter
+
+        swipeRefreshLayout.setOnRefreshListener {
+            recyclerviewCountryList.visibility=View.GONE
+            txtCountryError.visibility=View.GONE
+            progressCountryLoading.visibility=View.VISIBLE
+            viewModel.refreshFromAPI()
+            swipeRefreshLayout.isRefreshing=false
+        }
+
 
         observeLiveData()
 
